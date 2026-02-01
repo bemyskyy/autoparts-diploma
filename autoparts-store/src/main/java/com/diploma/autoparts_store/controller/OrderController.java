@@ -25,14 +25,14 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderDto> getOrders(Principal principal) {
-        User user = userRepository.findByPhone(principal.getName()).orElseThrow();
+    public List<OrderDto> getMyOrders(Principal principal) {
+        return orderService.getUserOrders(principal.getName());
+    }
 
-        if (user.getRole() == Role.ADMIN) {
-            return orderService.getAllOrders();
-        } else {
-            return orderService.getUserOrders(principal.getName());
-        }
+    @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<OrderDto> getAllOrdersForAdmin() {
+        return orderService.getAllOrders();
     }
 
     @PatchMapping("/{id}/status")

@@ -246,7 +246,7 @@ export class AdminOrdersComponent implements OnInit {
   }
 
   loadOrders() {
-    this.orderService.getOrders().subscribe(data => {
+    this.orderService.getAllOrders().subscribe(data => {
         this.orders = data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     });
   }

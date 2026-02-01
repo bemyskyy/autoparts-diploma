@@ -25,7 +25,7 @@ CREATE TABLE products (
     description TEXT,
     price DECIMAL(19, 2) NOT NULL,
     stock_quantity INTEGER NOT NULL DEFAULT 0,
-    image_url VARCHAR(512)
+    image_url TEXT
 );
 
 -- Индексы

@@ -28,6 +28,10 @@ export class OrderService {
     return this.http.get<OrderDto[]>(this.apiUrl);
   }
 
+  getAllOrders(): Observable<OrderDto[]> {
+    return this.http.get<OrderDto[]>(`${this.apiUrl}/all`);
+  }
+
   updateStatus(id: number, status: string): Observable<void> {
     return this.http.patch<void>(`${this.apiUrl}/${id}/status`, null, {
       params: { status }

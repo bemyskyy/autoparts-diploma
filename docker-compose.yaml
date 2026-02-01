@@ -1,0 +1,45 @@
+services:
+  # База данных
+  postgres:
+    image: 'postgres:16-alpine'
+    container_name: autoparts_db
+    ports:
+      - '5434:5432'
+    environment:
+      - POSTGRES_DB=autoparts_db
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Бэкенд (Spring Boot)
+  backend:
+    build: ./autoparts-store
+    container_name: autoparts_backend
+    ports:
+      - '8080:8080'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/autoparts_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Фронтенд (Angular + Nginx)
+  frontend:
+    build: ./autoparts-client
+    container_name: autoparts_frontend
+    ports:
+      - '80:80'
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

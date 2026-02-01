@@ -20,7 +20,6 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
-
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
@@ -31,6 +30,11 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (userRepository.count() == 0) {
             initUsers();
+        }
+        if (productRepository.count() == 0) {
+            System.out.println(">>> Products count is 0. Re-initializing Catalog...");
+            productRepository.deleteAll();
+            categoryRepository.deleteAll();
             initCategoriesAndProducts();
         }
     }
